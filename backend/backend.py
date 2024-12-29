@@ -24,7 +24,7 @@ mqtt_client.connect(BROKER, PORT)
 mqtt_client.loop_start()
 
 
-@app.route('/api/activate_pump', methods=['GET'])
+@app.route('/api/pump/activate', methods=['GET'])
 def activatePump():
     global pump_activated
     
@@ -36,7 +36,7 @@ def activatePump():
     
     return jsonify({"message": "Pump activated!"})
 
-@app.route('/api/deactivate_pump', methods=['GET'])
+@app.route('/api/pump/deactivate', methods=['GET'])
 def deactivatePump():
     global pump_activated
     
@@ -48,7 +48,7 @@ def deactivatePump():
     
     return jsonify({"message": "Pump deactivated!"})
 
-@app.route('/api/pump_status', methods=['GET'])
+@app.route('/api/pump/status', methods=['GET'])
 def pumpStatus():
     return jsonify({"pump_activated": pump_activated})
 
