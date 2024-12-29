@@ -50,7 +50,7 @@ def deactivatePump():
 
 @app.route('/api/pump/status', methods=['GET'])
 def pumpStatus():
-    return jsonify({"pump_activated": pump_activated})
+    return jsonify({"Pump status": pump_activated})
 
 if __name__ == '__main__': 
     app.run(debug=True)
