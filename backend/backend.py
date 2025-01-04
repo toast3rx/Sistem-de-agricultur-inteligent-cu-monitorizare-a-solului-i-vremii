@@ -58,7 +58,9 @@ def deactivatePump():
 
 @app.route('/api/pump/status', methods=['GET'])
 def pumpStatus():
-    return jsonify({"Pump status": "ON" if pump_activated else "OFF"})
+    response = jsonify({"Pump status": "ON" if pump_activated else "OFF"})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 if __name__ == '__main__': 
     app.run(debug=True)
