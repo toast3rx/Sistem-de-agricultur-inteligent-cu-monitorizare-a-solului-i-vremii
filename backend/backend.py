@@ -32,9 +32,13 @@ def activatePump():
         mqtt_client.publish(PUMP_TOPIC, "ON")
         pump_activated = True
     else:
-        return jsonify({"message": "Pump already activated!"})
+        response = jsonify({"message": "Pump already activated!"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     
-    return jsonify({"message": "Pump activated!"})
+    response = jsonify({"message": "Pump activated!"})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route('/api/pump/deactivate', methods=['GET'])
 def deactivatePump():
@@ -44,9 +48,13 @@ def deactivatePump():
         mqtt_client.publish(PUMP_TOPIC, "OFF")
         pump_activated = False
     else:
-        return jsonify({"message": "Pump already deactivated!"})
+        response = jsonify({"message": "Pump already deactivated!"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     
-    return jsonify({"message": "Pump deactivated!"})
+    response = jsonify({"message": "Pump deactivated!"})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route('/api/pump/status', methods=['GET'])
 def pumpStatus():
