@@ -29,4 +29,18 @@ Pentru vizualizarea datelor este folosita platforma Grafana.
 
 ![Colector de date](res/colector.jpg)
 
+### 3. Utilizare
+
+### 3.1. Colector date
+
+	* Instaleaza firmware-ul pe Raspberry Pi Pico
+	* Incarca fisierul simple.py pe placuta
+	* Incarca fisierul PicoDHT22.py pe placuta
+	* Ruleaza data-producer/main.py
+
+### 3.2 Dispozitiv de control
+
+	* Instaleaza firmware-ul pe Raspberry Pi Pico
+	* Incarca fisierul simple.py pe placuta
+	* Ruleaza action-producer/main.py
 

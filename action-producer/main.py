@@ -14,8 +14,11 @@ pump_motor = Pin(16, Pin.OUT)
 
 def wifi_connect():
 
-	ssid = "Alex"
-	password = "kamikaze"
+	# ssid = "Alex"
+	# password = "kamikaze"
+ 
+	ssid = "apacalda"
+	password = "apacaldanuexista"
 
 	wlan = network.WLAN(network.STA_IF)
 	wlan.active(True)

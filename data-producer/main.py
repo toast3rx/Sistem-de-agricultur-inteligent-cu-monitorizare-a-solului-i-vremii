@@ -4,19 +4,27 @@ import PicoDHT22 as dht
 import simple as mqtt
 import json
 import network
-
+import urequests as requests
+import gc
 
 dht_pin = machine.Pin(22)
 rain_sensor = machine.ADC(26)
 soil_sensor = machine.ADC(27)
 light_pin = machine.Pin(21)
 
+bot_token = '8047433117:AAGA_Zlsmg1_zo0aIfg8mU7cFGq8IsQeEcw'
+chat_id = '8155860152'
+
+last_telegram_message_time = 0
+telegram_message_interval = 3600
 
 def wifi_connect():
 
-	ssid = "Alex"
-	password = "kamikaze"
-
+	# ssid = "Alex"
+	# password = "kamikaze"
+ 
+	ssid = "apacalda"
+	password = "apacaldanuexista"
 	wlan = network.WLAN(network.STA_IF)
 	wlan.active(True)
  
@@ -34,8 +42,6 @@ def wifi_connect():
  
 
 def mqtt_connect():
-	
-	# get unique id from rest api
 	mqtt_server = "35.239.200.114"
  	
 	client = mqtt.MQTTClient(client_id, mqtt_server)
@@ -44,13 +50,23 @@ def mqtt_connect():
 	print("Connected to MQTT")
 	return client
 
+def send_telegram_message(message):
+	gc.collect()
+	url = f"https://api.telegram.org/bot8047433117:AAGA_Zlsmg1_zo0aIfg8mU7cFGq8IsQeEcw/sendMessage"
+	payload = {"chat_id": chat_id, "text": message}
+	
+	response = requests.post(url, json=payload)
+	response.close()
+	print("Message sent successfully!")
+
+
 def check_light_status():
-    light_value = light_pin.value()
-    
-    if light_value == 0:
-        return "Lumina"
-    else:
-        return "Intuneric"
+	light_value = light_pin.value()
+	
+	if light_value == 0:
+		return "Lumina"
+	else:
+		return "Intuneric"
 
 def check_soil_status():
 	raw_value = soil_sensor.read_u16() // 64
@@ -120,13 +136,19 @@ while True:
 		}
   
 		# Publish the data
-		client.publish(client_id + "/temperature", json.dumps(temp_data))
-		client.publish(client_id + "/humidity", json.dumps(hum_data))
-		client.publish(client_id + "/rain", json.dumps(rain_data))
-		client.publish(client_id + "/soil", json.dumps(soil_data))
-		client.publish(client_id + "/light", json.dumps(light_data))
+		client.publish(client_id + "/temperature", json.dumps(temp_data), retain=True)
+		client.publish(client_id + "/humidity", json.dumps(hum_data), retain=True)
+		client.publish(client_id + "/rain", json.dumps(rain_data), retain=True)
+		client.publish(client_id + "/soil", json.dumps(soil_data), retain=True)
+		client.publish(client_id + "/light", json.dumps(light_data), retain=True)
 
-
+		current_time = time.time()	
+		
+		if soil_status in ["Uscat", "Foarte uscat"] and (current_time - last_telegram_message_time > telegram_message_interval):
+			message = f"Alertă: Umiditatea solului este {soil_status.lower()}a!!"
+			send_telegram_message(message)
+			last_telegram_message_time = current_time
+  
 		# Convert to JSON and publish
 		print("Published data:", data)
 
